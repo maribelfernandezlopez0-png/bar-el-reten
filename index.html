@@ -2,188 +2,198 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Bar El Reten - Señal TV 4K</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>El Retén Billar Bar - Nebulosa Azul/Rojo</title>
     <style>
-        /* =========================================
-           ESTILOS CSS (DISEÑO Y NEBULOSA)
-           ========================================= */
-        
-        /* 1. Configuración de la Pantalla (TV) */
         body, html {
             margin: 0;
             padding: 0;
             width: 100%;
             height: 100%;
-            background-color: #050505; /* Negro profundo */
-            overflow: hidden; /* Sin barras de scroll */
-            cursor: none; /* OCULTA EL MOUSE */
-            font-family: 'Arial', sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            user-select: none; /* No se puede seleccionar texto */
-        }
-
-        /* 2. Fondo de Nebulosa Animada */
-        .nebula-container {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
             overflow: hidden;
+            background-color: #050011;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
-        .nebula-layer {
-            position: absolute;
-            width: 200%;
-            height: 200%;
-            top: -50%;
-            left: -50%;
-            border-radius: 40%;
-            opacity: 0.6;
-            filter: blur(80px); /* Difuminado suave de colores */
-            animation: rotateNebula 20s linear infinite;
-        }
-
-        /* Capa 1: Morado Espacial */
-        .layer1 {
-            background: radial-gradient(circle, rgba(76, 29, 149, 0.5) 0%, rgba(0, 0, 0, 0) 60%);
-            animation-duration: 25s;
-            animation-direction: normal;
-        }
-
-        /* Capa 2: Rojo Intenso (Contraste) */
-        .layer2 {
-            background: radial-gradient(circle, rgba(14, 165, 233, 0.4) 0%, rgba(220, 38, 38, 0.2) 60%, rgba(0,0,0,0) 80%);
-            animation-duration: 35s;
-            animation-direction: reverse;
-            top: -30%;
-            left: -30%;
-        }
-
-        /* Estrellas */
-        .stars {
+        #nebulaCanvas {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-image: 
-                radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 3px),
-                radial-gradient(white, rgba(255,255,255,.1) 1px, transparent 2px);
-            background-size: 550px 550px, 350px 350px;
-            opacity: 0.8;
-            z-index: -1;
+            z-index: 1;
         }
 
-        @keyframes rotateNebula {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* 3. Contenido Central (Logo y Texto) */
-        #tv-content {
-            position: relative;
+        .logo-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             z-index: 10;
             text-align: center;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
+            width: 90%;
         }
 
-        .logo-tv {
-            max-height: 65vh; /* Ocupa el 65% de alto de la TV */
-            max-width: 85vw;
-            width: auto;
-            /* Sombra brillante para resaltar sobre el fondo oscuro */
-            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.2)) 
-                    drop-shadow(0 0 30px rgba(0, 0, 0, 0.8));
-            animation: floatLogo 6s ease-in-out infinite;
+        /* Marco de neón (ahora azul para coincidir con el título) */
+        .neon-box {
+            border: 4px solid #fff;
+            padding: 20px 40px;
+            display: inline-block;
+            box-shadow: 
+                0 0 10px #00e6e6,
+                0 0 20px #00e6e6,
+                inset 0 0 10px #00e6e6,
+                inset 0 0 20px #00e6e6;
+            border-radius: 10px;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(2px);
         }
 
-        .neon-text {
+        /* Texto Principal: EL RETÉN (Ahora en AZUL) */
+        h1 {
             color: #fff;
-            font-size: 4vw;
-            margin-top: 20px;
+            font-size: 6rem;
+            margin: 0;
+            line-height: 1;
             text-transform: uppercase;
+            font-weight: 900;
             letter-spacing: 5px;
-            font-weight: bold;
+            /* Efecto Neón Azul Cian intenso */
             text-shadow: 
-                0 0 10px #fff,
-                0 0 20px #ff00de,
-                0 0 40px #ff00de;
+                0 0 10px #00e6e6,
+                0 0 20px #00e6e6,
+                0 0 40px #00e6e6,
+                0 0 80px #00ffff;
             animation: flicker 3s infinite alternate;
         }
 
-        /* Animaciones */
-        @keyframes floatLogo {
-            0% { transform: translateY(0px) scale(1); }
-            50% { transform: translateY(-15px) scale(1.02); }
-            100% { transform: translateY(0px) scale(1); }
+        /* Subtexto: BILLAR BAR (Ahora en ROJO) */
+        h2 {
+            color: #fff;
+            font-size: 3rem;
+            margin: 10px 0 0 0;
+            font-weight: 300;
+            letter-spacing: 8px;
+            text-transform: uppercase;
+            /* Efecto Neón Rojo */
+            text-shadow: 
+                0 0 10px #ff3838,
+                0 0 20px #ff3838,
+                0 0 40px #ff3838;
         }
 
         @keyframes flicker {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.8; }
+            0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { opacity: 1; }
+            20%, 24%, 55% { opacity: 0.9; }
+        }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 3.5rem; }
+            h2 { font-size: 1.5rem; }
+            .neon-box { padding: 15px; border-width: 3px; }
         }
     </style>
 </head>
 <body>
 
-    <div class="nebula-container">
-        <div class="nebula-layer layer1"></div>
-        <div class="nebula-layer layer2"></div>
-        <div class="stars"></div>
-    </div>
+    <canvas id="nebulaCanvas"></canvas>
 
-    <div id="tv-content">
-        <img src="logo.png" alt="Logo Bar El Reten" class="logo-tv">
-        
-        <h1 class="neon-text">BIENVENIDOS</h1>
+    <div class="logo-container">
+        <div class="neon-box">
+            <h1>EL RETÉN</h1>
+            <h2>BILLAR BAR</h2>
+        </div>
     </div>
 
     <script>
-        /* =========================================
-           JAVASCRIPT (FUNCIONES TV)
-           ========================================= */
-        document.addEventListener('DOMContentLoaded', () => {
-            
-            // 1. PANTALLA COMPLETA AUTOMÁTICA (Al hacer clic)
-            document.body.addEventListener('click', () => {
-                if (!document.fullscreenElement) {
-                    document.documentElement.requestFullscreen().catch(err => {
-                        console.log(`Error pantalla completa: ${err.message}`);
-                    });
+        // --- MISMO CÓDIGO JAVASCRIPT PARA LA NEBULOSA ---
+        const canvas = document.getElementById('nebulaCanvas');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+        let particles = [];
+        let stars = [];
+        const colors = [
+            'rgba(255, 0, 80, 0.05)',
+            'rgba(100, 0, 255, 0.05)',
+            'rgba(0, 100, 255, 0.04)',
+            'rgba(255, 50, 50, 0.03)'
+        ];
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+        class Cloud {
+            constructor() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.radius = Math.random() * 200 + 100;
+                this.speedX = (Math.random() - 0.5) * 0.5;
+                this.speedY = (Math.random() - 0.5) * 0.5;
+                this.color = colors[Math.floor(Math.random() * colors.length)];
+                this.growth = (Math.random() - 0.5) * 0.2;
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+                this.radius += this.growth;
+                if (this.radius < 50 || this.radius > 400 || 
+                    this.x < -400 || this.x > width + 400 || 
+                    this.y < -400 || this.y > height + 400) {
+                    this.x = Math.random() * width;
+                    this.y = Math.random() * height;
+                    this.radius = Math.random() * 200 + 100;
+                    this.speedX = (Math.random() - 0.5) * 0.5;
+                    this.speedY = (Math.random() - 0.5) * 0.5;
                 }
-            });
-
-            // 2. MANTENER TV ENCENDIDA (Wake Lock)
-            let wakeLock = null;
-
-            const requestWakeLock = async () => {
-                try {
-                    if ('wakeLock' in navigator) {
-                        wakeLock = await navigator.wakeLock.request('screen');
-                        console.log('Pantalla siempre activa.');
-                    }
-                } catch (err) {
-                    console.error('WakeLock no soportado en este navegador');
+            }
+            draw() {
+                ctx.beginPath();
+                let gradient = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.radius);
+                gradient.addColorStop(0, this.color);
+                gradient.addColorStop(1, 'rgba(0,0,0,0)');
+                ctx.fillStyle = gradient;
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+        class Star {
+            constructor() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.size = Math.random() * 2;
+                this.alpha = Math.random();
+                this.alphaChange = (Math.random() * 0.02) + 0.005;
+                this.direction = Math.random() > 0.5 ? 1 : -1;
+            }
+            update() {
+                this.alpha += this.alphaChange * this.direction;
+                if (this.alpha > 1 || this.alpha < 0) {
+                    this.direction *= -1;
                 }
-            };
-
-            requestWakeLock();
-
-            // Reactivar si la app se minimiza y vuelve
-            document.addEventListener('visibilitychange', async () => {
-                if (wakeLock !== null && document.visibilityState === 'visible') {
-                    await requestWakeLock();
-                }
-            });
-        });
+            }
+            draw() {
+                ctx.fillStyle = `rgba(255, 255, 255, ${this.alpha})`;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+        function init() {
+            resize();
+            for (let i = 0; i < 60; i++) particles.push(new Cloud());
+            for (let i = 0; i < 150; i++) stars.push(new Star());
+        }
+        function animate() {
+            ctx.clearRect(0, 0, width, height); 
+            ctx.globalCompositeOperation = 'lighter'; 
+            particles.forEach(p => { p.update(); p.draw(); });
+            ctx.globalCompositeOperation = 'source-over';
+            stars.forEach(s => { s.update(); s.draw(); });
+            requestAnimationFrame(animate);
+        }
+        window.addEventListener('resize', resize);
+        init();
+        animate();
     </script>
 </body>
 </html>
