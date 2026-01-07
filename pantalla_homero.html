@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bar El Retén - Solo Leveling Mode</title>
+    <style>
+        /* CONFIGURACIÓN DE PANTALLA */
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #05000a; /* Fondo casi negro */
+            overflow: hidden;
+            font-family: sans-serif;
+            cursor: none; /* Oculta el mouse */
+        }
+
+        #shadowCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            display: block;
+            z-index: 1;
+        }
+
+        /* CAPA DE SOMBRA (VIGNETTE) */
+        .vignette {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, transparent 40%, #000000 100%);
+            z-index: 2;
+            pointer-events: none;
+        }
+
+        /* CONTENEDOR DEL LOGO */
+        .logo-wrapper {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+        }
+
+        /* IMAGEN DEL LOGO (HOMERO) */
+        .bar-logo {
+            max-width: 55%; 
+            max-height: 80vh;
+            height: auto;
+            
+            /* Animación de "Energía Oscura" pulsante */
+            animation: darkEnergy 4s infinite alternate ease-in-out;
+            filter: drop-shadow(0 0 15px rgba(138, 43, 226, 0.6)); /* Sombra base morada */
+        }
+
+        /* ANIMACIÓN DEL LOGO */
+        @keyframes darkEnergy {
+            0% {
+                transform: scale(1);
+                filter: drop-shadow(0 0 10px rgba(100, 0, 200, 0.5));
+            }
+            100% {
+                transform: scale(1.03);
+                /* Resplandor morado intenso tipo Solo Leveling */
+                filter: drop-shadow(0 0 40px rgba(180, 50, 255, 0.8));
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="shadowCanvas"></canvas>
+    
+    <div class="vignette"></div>
+
+    <div class="logo-wrapper">
+        <img src="logo.jpg" alt="Bar El Reten" class="bar-logo">
+    </div>
+
+    <script>
+        const canvas = document.getElementById('shadowCanvas');
+        const ctx = canvas.getContext('2d');
+
+        let width, height;
+        let particles = [];
+        let sparks = [];
+
+        // PALETA DE COLORES "SOLO LEVELING" (Morados, Azules oscuros, Negros)
+        const shadowColors = [
+            'rgba(75, 0, 130, 0.15)',   // Indigo oscuro
+            'rgba(138, 43, 226, 0.1)',  // Azul violeta
+            'rgba(148, 0, 211, 0.08)',  // Violeta oscuro
+            'rgba(0, 0, 0, 0.5)'        // Sombra pura
+        ];
+
+        function resize() {
+            width = window.innerWidth;
+            height = window.innerHeight;
+            canvas.width = width;
+            canvas.height = height;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        // CLASE: HUMO / SOMBRAS (Las nubes de fondo)
+        class Smoke {
+            constructor() {
+                this.reset();
+            }
+            
+            reset() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.radius = Math.random() * 300 + 150; // Grandes manchas de humo
+                this.vx = (Math.random() - 0.5) * 0.4; // Lento
+                this.vy = (Math.random() - 0.5) * 0.4;
+                this.color = shadowColors[Math.floor(Math.random() * shadowColors.length)];
+            }
+
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+
+                // Rebote suave infinito
+                if (this.x < -400) this.x = width + 400;
+                if (this.x > width + 400) this.x = -400;
+                if (this.y < -400) this.y = height + 400;
+                if (this.y > height + 400) this.y = -400;
+            }
+
+            draw() {
+                ctx.beginPath();
+                const g = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.radius);
+                g.addColorStop(0, this.color);
+                g.addColorStop(1, 'rgba(0,0,0,0)');
+                ctx.fillStyle = g;
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        // CLASE: CHISPAS (Las partículas brillantes ascendentes típicas del anime)
+        class Spark {
+            constructor() {
+                this.reset();
+            }
+
+            reset() {
+                this.x = Math.random() * width;
+                this.y = height + Math.random() * 100; // Empiezan abajo
+                this.size = Math.random() * 2 + 1;
+                this.speedY = Math.random() * 1 + 0.5; // Suben
+                this.opacity = Math.random();
+                this.fade = Math.random() * 0.01 + 0.002;
+            }
+
+            update() {
+                this.y -= this.speedY; // Mover hacia arriba
+                this.opacity -= this.fade;
+
+                if (this.opacity <= 0 || this.y < 0) {
+                    this.reset();
+                }
+            }
+
+            draw() {
+                ctx.fillStyle = `rgba(180, 100, 255, ${this.opacity})`; // Color lavanda brillante
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function init() {
+            particles = [];
+            sparks = [];
+            // Crear humo
+            for (let i = 0; i < 40; i++) particles.push(new Smoke());
+            // Crear chispas ascendentes (estilo "arise")
+            for (let i = 0; i < 80; i++) sparks.push(new Spark());
+        }
+
+        function animate() {
+            // Fondo negro que deja estela muy leve
+            ctx.fillStyle = '#05000a'; 
+            ctx.fillRect(0, 0, width, height);
+
+            // Dibujar humo con mezcla "screen" para que los morados brillen
+            ctx.globalCompositeOperation = 'screen';
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+
+            // Dibujar chispas
+            ctx.globalCompositeOperation = 'source-over';
+            sparks.forEach(s => {
+                s.update();
+                s.draw();
+            });
+
+            requestAnimationFrame(animate);
+        }
+
+        init();
+        animate();
+
+        // Doble clic para Pantalla Completa
+        document.addEventListener('dblclick', () => {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+            } else {
+                if (document.exitFullscreen) document.exitFullscreen();
+            }
+        });
+    </script>
+</body>
+</html>
