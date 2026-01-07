@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Bar El Reten - TV 4K</title>
+    <style>
+        /* --- ESTILOS CSS (DISEÑO) --- */
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            overflow: hidden;
+            font-family: 'Arial', sans-serif;
+            cursor: none; /* Oculta el mouse para TV */
+        }
+
+        /* Fondo Animado Tipo Video */
+        .video-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, #0a0a0a, #1a051a);
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        /* Luces de discoteca/nebulosa */
+        .light-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.6;
+            animation: floatOrb 20s infinite alternate;
+        }
+
+        .orb1 { width: 50vw; height: 50vw; background: #4c1d95; top: -10%; left: -10%; animation-delay: 0s; }
+        .orb2 { width: 60vw; height: 60vw; background: #be123c; bottom: -10%; right: -10%; animation-delay: -5s; }
+        .orb3 { width: 30vw; height: 30vw; background: #0ea5e9; top: 40%; left: 40%; animation-delay: -10s; opacity: 0.4; }
+
+        /* Contenedor del Logo */
+        .content-box {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        .logo-img {
+            max-width: 80vw;
+            max-height: 70vh;
+            /* Efecto de resplandor para que parezca pantalla de video */
+            filter: drop-shadow(0 0 20px rgba(255,255,255,0.2)) drop-shadow(0 0 50px rgba(255, 0, 0, 0.4));
+            animation: pulseLogo 4s ease-in-out infinite;
+        }
+
+        .welcome-text {
+            font-family: sans-serif;
+            font-size: 5vw;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 10px;
+            font-weight: 900;
+            margin-top: 20px;
+            text-shadow: 0 0 20px #ff00de, 0 0 40px #ff00de;
+            opacity: 0;
+            animation: fadeInText 3s forwards 1s; /* Aparece suavemente */
+        }
+
+        @keyframes floatOrb {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(100px, 50px) scale(1.2); }
+        }
+
+        @keyframes pulseLogo {
+            0% { transform: scale(1); filter: drop-shadow(0 0 20px rgba(255,255,255,0.2)); }
+            50% { transform: scale(1.02); filter: drop-shadow(0 0 40px rgba(255, 0, 0, 0.6)); }
+            100% { transform: scale(1); filter: drop-shadow(0 0 20px rgba(255,255,255,0.2)); }
+        }
+        
+        @keyframes fadeInText { to { opacity: 1; } }
+
+    </style>
+</head>
+<body>
+
+    <div class="video-bg">
+        <div class="light-orb orb1"></div>
+        <div class="light-orb orb2"></div>
+        <div class="light-orb orb3"></div>
+    </div>
+
+    <div class="content-box">
+        <img src="logo.png" alt="Bar El Reten" class="logo-img" id="mainLogo">
+        <div class="welcome-text">Bienvenidos</div>
+    </div>
+
+    <script>
+        // --- JAVASCRIPT (FUNCIONALIDAD TV) ---
+        document.addEventListener('DOMContentLoaded', () => {
+            // 1. Activar Pantalla Completa al tocar
+            document.body.addEventListener('click', () => {
+                if (!document.fullscreenElement) {
+                    document.documentElement.requestFullscreen().catch(e => console.log(e));
+                }
+            });
+
+            // 2. Mantener pantalla encendida (WakeLock)
+            async function keepScreenOn() {
+                try {
+                    if ('wakeLock' in navigator) {
+                        await navigator.wakeLock.request('screen');
+                        console.log('Pantalla siempre encendida');
+                    }
+                } catch (err) { console.log('WakeLock no soportado'); }
+            }
+            keepScreenOn();
+            document.addEventListener('visibilitychange', keepScreenOn);
+        });
+    </script>
+</body>
+</html>
