@@ -3,100 +3,187 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Bar El Reten - Señal 4K</title>
+    <title>Bar El Reten - Señal TV 4K</title>
     <style>
-        /* ESTILOS INTEGRADOS (Para que no falle la carga) */
+        /* =========================================
+           ESTILOS CSS (DISEÑO Y NEBULOSA)
+           ========================================= */
+        
+        /* 1. Configuración de la Pantalla (TV) */
         body, html {
             margin: 0;
             padding: 0;
             width: 100%;
             height: 100%;
-            background-color: #000;
-            overflow: hidden;
-            cursor: none; /* Oculta el mouse */
+            background-color: #050505; /* Negro profundo */
+            overflow: hidden; /* Sin barras de scroll */
+            cursor: none; /* OCULTA EL MOUSE */
             font-family: 'Arial', sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
+            user-select: none; /* No se puede seleccionar texto */
         }
 
-        /* Fondo Animado Nebulosa */
-        .nebula-bg {
+        /* 2. Fondo de Nebulosa Animada */
+        .nebula-container {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, #050505 0%, #1a0b2e 100%);
-            z-index: -1;
-        }
-        
-        .stars {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            background-image: radial-gradient(white 1px, transparent 1px);
-            background-size: 50px 50px;
-            opacity: 0.2;
+            z-index: 0;
+            overflow: hidden;
         }
 
-        /* Contenedor Central */
-        .tv-content {
-            text-align: center;
+        .nebula-layer {
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            top: -50%;
+            left: -50%;
+            border-radius: 40%;
+            opacity: 0.6;
+            filter: blur(80px); /* Difuminado suave de colores */
+            animation: rotateNebula 20s linear infinite;
+        }
+
+        /* Capa 1: Morado Espacial */
+        .layer1 {
+            background: radial-gradient(circle, rgba(76, 29, 149, 0.5) 0%, rgba(0, 0, 0, 0) 60%);
+            animation-duration: 25s;
+            animation-direction: normal;
+        }
+
+        /* Capa 2: Rojo Intenso (Contraste) */
+        .layer2 {
+            background: radial-gradient(circle, rgba(14, 165, 233, 0.4) 0%, rgba(220, 38, 38, 0.2) 60%, rgba(0,0,0,0) 80%);
+            animation-duration: 35s;
+            animation-direction: reverse;
+            top: -30%;
+            left: -30%;
+        }
+
+        /* Estrellas */
+        .stars {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                radial-gradient(white, rgba(255,255,255,.2) 2px, transparent 3px),
+                radial-gradient(white, rgba(255,255,255,.1) 1px, transparent 2px);
+            background-size: 550px 550px, 350px 350px;
+            opacity: 0.8;
+            z-index: -1;
+        }
+
+        @keyframes rotateNebula {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* 3. Contenido Central (Logo y Texto) */
+        #tv-content {
+            position: relative;
             z-index: 10;
+            text-align: center;
             display: flex;
             flex-direction: column;
+            justify-content: center;
             align-items: center;
         }
 
-        .logo-img {
-            max-width: 85vw; /* Ocupa buen espacio en la TV */
-            max-height: 70vh;
-            filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.1)); /* Sombra suave */
-            animation: float 6s ease-in-out infinite;
+        .logo-tv {
+            max-height: 65vh; /* Ocupa el 65% de alto de la TV */
+            max-width: 85vw;
+            width: auto;
+            /* Sombra brillante para resaltar sobre el fondo oscuro */
+            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.2)) 
+                    drop-shadow(0 0 30px rgba(0, 0, 0, 0.8));
+            animation: floatLogo 6s ease-in-out infinite;
         }
 
-        .welcome-text {
-            font-size: 5vw;
+        .neon-text {
             color: #fff;
+            font-size: 4vw;
             margin-top: 20px;
-            font-weight: bold;
             text-transform: uppercase;
-            letter-spacing: 0.2em;
-            text-shadow: 0 0 10px #fff, 0 0 20px #ff00de, 0 0 40px #ff00de;
-            animation: glow 2s infinite alternate;
+            letter-spacing: 5px;
+            font-weight: bold;
+            text-shadow: 
+                0 0 10px #fff,
+                0 0 20px #ff00de,
+                0 0 40px #ff00de;
+            animation: flicker 3s infinite alternate;
         }
 
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-20px); }
+        /* Animaciones */
+        @keyframes floatLogo {
+            0% { transform: translateY(0px) scale(1); }
+            50% { transform: translateY(-15px) scale(1.02); }
+            100% { transform: translateY(0px) scale(1); }
         }
 
-        @keyframes glow {
-            from { opacity: 0.8; }
-            to { opacity: 1; text-shadow: 0 0 20px #fff, 0 0 40px #ff00de; }
+        @keyframes flicker {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
         }
     </style>
 </head>
 <body>
-    <div class="nebula-bg"><div class="stars"></div></div>
 
-    <div class="tv-content">
-        <img src="logo.png" alt="Bar El Reten" class="logo-img">
-        <div class="welcome-text">BIENVENIDOS</div>
+    <div class="nebula-container">
+        <div class="nebula-layer layer1"></div>
+        <div class="nebula-layer layer2"></div>
+        <div class="stars"></div>
+    </div>
+
+    <div id="tv-content">
+        <img src="logo.png" alt="Logo Bar El Reten" class="logo-tv">
+        
+        <h1 class="neon-text">BIENVENIDOS</h1>
     </div>
 
     <script>
-        // Script para pantalla completa al hacer clic
-        document.addEventListener('click', () => {
-            if (!document.fullscreenElement) {
-                document.documentElement.requestFullscreen().catch(e => console.log(e));
-            }
+        /* =========================================
+           JAVASCRIPT (FUNCIONES TV)
+           ========================================= */
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // 1. PANTALLA COMPLETA AUTOMÁTICA (Al hacer clic)
+            document.body.addEventListener('click', () => {
+                if (!document.fullscreenElement) {
+                    document.documentElement.requestFullscreen().catch(err => {
+                        console.log(`Error pantalla completa: ${err.message}`);
+                    });
+                }
+            });
+
+            // 2. MANTENER TV ENCENDIDA (Wake Lock)
+            let wakeLock = null;
+
+            const requestWakeLock = async () => {
+                try {
+                    if ('wakeLock' in navigator) {
+                        wakeLock = await navigator.wakeLock.request('screen');
+                        console.log('Pantalla siempre activa.');
+                    }
+                } catch (err) {
+                    console.error('WakeLock no soportado en este navegador');
+                }
+            };
+
+            requestWakeLock();
+
+            // Reactivar si la app se minimiza y vuelve
+            document.addEventListener('visibilitychange', async () => {
+                if (wakeLock !== null && document.visibilityState === 'visible') {
+                    await requestWakeLock();
+                }
+            });
         });
-        // Mantener pantalla encendida
-        if ('wakeLock' in navigator) {
-            navigator.wakeLock.request('screen').catch(e => console.log('WakeLock no disponible'));
-        }
     </script>
 </body>
 </html>
