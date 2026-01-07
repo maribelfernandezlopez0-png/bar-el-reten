@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>El Retén Billar Bar - Nebulosa Azul/Rojo</title>
+    <title>Nebulosa con Logo de Bar</title>
     <style>
         body, html {
             margin: 0;
@@ -11,10 +11,10 @@
             width: 100%;
             height: 100%;
             overflow: hidden;
-            background-color: #050011;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #050011; /* Fondo muy oscuro */
         }
 
+        /* El lienzo para la animación de la nebulosa (fondo) */
         #nebulaCanvas {
             position: absolute;
             top: 0;
@@ -24,74 +24,47 @@
             z-index: 1;
         }
 
+        /* Contenedor para centrar el logo */
         .logo-container {
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            z-index: 10;
+            z-index: 10; /* Asegura que el logo esté sobre la nebulosa */
             text-align: center;
-            width: 90%;
+            width: 90%; /* Ancho máximo del contenedor */
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
-        /* Marco de neón (ahora azul para coincidir con el título) */
-        .neon-box {
-            border: 4px solid #fff;
-            padding: 20px 40px;
-            display: inline-block;
-            box-shadow: 
-                0 0 10px #00e6e6,
-                0 0 20px #00e6e6,
-                inset 0 0 10px #00e6e6,
-                inset 0 0 20px #00e6e6;
-            border-radius: 10px;
-            background: rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(2px);
+        /* Estilos para la imagen del logo */
+        .bar-logo {
+            /* Hace que la imagen sea responsiva pero no exceda su tamaño original */
+            max-width: 100%; 
+            height: auto; 
+            
+            /* Opcional: limita la altura máxima en pantallas muy grandes para que no ocupe toda la pantalla */
+            max-height: 80vh; 
+
+            display: block;
+            
+            /* Animación suave de resplandor para que parezca que tiene luz propia */
+            animation: logoGlow 4s ease-in-out infinite alternate;
         }
 
-        /* Texto Principal: EL RETÉN (Ahora en AZUL) */
-        h1 {
-            color: #fff;
-            font-size: 6rem;
-            margin: 0;
-            line-height: 1;
-            text-transform: uppercase;
-            font-weight: 900;
-            letter-spacing: 5px;
-            /* Efecto Neón Azul Cian intenso */
-            text-shadow: 
-                0 0 10px #00e6e6,
-                0 0 20px #00e6e6,
-                0 0 40px #00e6e6,
-                0 0 80px #00ffff;
-            animation: flicker 3s infinite alternate;
+        /* Animación de respiración/resplandor para el logo */
+        @keyframes logoGlow {
+            from {
+                /* Sombra suave y brillo normal */
+                filter: drop-shadow(0 0 10px rgba(255,255,255,0.3)) brightness(1);
+            }
+            to {
+                /* Sombra más intensa y un poco más de brillo */
+                filter: drop-shadow(0 0 25px rgba(200,220,255,0.6)) brightness(1.1);
+            }
         }
 
-        /* Subtexto: BILLAR BAR (Ahora en ROJO) */
-        h2 {
-            color: #fff;
-            font-size: 3rem;
-            margin: 10px 0 0 0;
-            font-weight: 300;
-            letter-spacing: 8px;
-            text-transform: uppercase;
-            /* Efecto Neón Rojo */
-            text-shadow: 
-                0 0 10px #ff3838,
-                0 0 20px #ff3838,
-                0 0 40px #ff3838;
-        }
-
-        @keyframes flicker {
-            0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { opacity: 1; }
-            20%, 24%, 55% { opacity: 0.9; }
-        }
-
-        @media (max-width: 768px) {
-            h1 { font-size: 3.5rem; }
-            h2 { font-size: 1.5rem; }
-            .neon-box { padding: 15px; border-width: 3px; }
-        }
     </style>
 </head>
 <body>
@@ -99,19 +72,16 @@
     <canvas id="nebulaCanvas"></canvas>
 
     <div class="logo-container">
-        <div class="neon-box">
-            <h1>EL RETÉN</h1>
-            <h2>BILLAR BAR</h2>
-        </div>
+        <img src="logo.png" alt="Logo del Bar" class="bar-logo">
     </div>
 
     <script>
-        // --- MISMO CÓDIGO JAVASCRIPT PARA LA NEBULOSA ---
         const canvas = document.getElementById('nebulaCanvas');
         const ctx = canvas.getContext('2d');
         let width, height;
         let particles = [];
         let stars = [];
+        // Colores de la nebulosa (Rojos, Azules, Violetas)
         const colors = [
             'rgba(255, 0, 80, 0.05)',
             'rgba(100, 0, 255, 0.05)',
