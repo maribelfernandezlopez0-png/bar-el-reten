@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>El Retén - Visuales</title>
+    <style>
+        /* RESET Y CONFIGURACIÓN BÁSICA */
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000000;
+            overflow: hidden; /* Evita que aparezcan barras de scroll */
+            font-family: sans-serif;
+            cursor: none; /* OCULTA EL CURSOR DEL MOUSE */
+        }
+
+        /* LIENZO DE LA NEBULOSA */
+        #nebulaCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            display: block;
+            z-index: 1;
+        }
+
+        /* CONTENEDOR DEL LOGO */
+        .logo-wrapper {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center; /* Centrado horizontal */
+            align-items: center;     /* Centrado vertical */
+            z-index: 10;
+            pointer-events: none;    /* Permite hacer clic a través del logo si fuera necesario */
+        }
+
+        /* IMAGEN DEL LOGO */
+        .bar-logo {
+            width: 50vw;  /* El logo ocupará el 50% del ancho de la pantalla */
+            max-width: 800px; /* Pero no más de 800px */
+            height: auto;
+            
+            /* ANIMACIÓN DE RESPIRACIÓN (BRILLO) */
+            animation: breathe 6s ease-in-out infinite;
+            
+            /* SOMBRA PARA QUE DESTAQUE DEL FONDO */
+            filter: drop-shadow(0 0 20px rgba(0,0,0,0.8));
+        }
+
+        @keyframes breathe {
+            0% {
+                transform: scale(1);
+                filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.1)) brightness(1);
+            }
+            50% {
+                transform: scale(1.03); /* Zoom muy sutil */
+                filter: drop-shadow(0 0 30px rgba(255, 255, 255, 0.4)) brightness(1.1);
+            }
+            100% {
+                transform: scale(1);
+                filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.1)) brightness(1);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="nebulaCanvas"></canvas>
+
+    <div class="logo-wrapper">
+        <img src="logo.png" alt="Logo El Retén" class="bar-logo">
+    </div>
+
+    <script>
+        /**
+         * ANIMACIÓN DE NEBULOSA Y ESTRELLAS
+         * Optimizada para Google Chrome
+         */
+        const canvas = document.getElementById('nebulaCanvas');
+        const ctx = canvas.getContext('2d');
+
+        let width, height;
+        let particles = [];
+        let stars = [];
+
+        // Colores de la nebulosa (Azules, Violetas, Magentas oscuros)
+        const nebulaColors = [
+            'rgba(60, 0, 120, 0.1)',   // Violeta oscuro
+            'rgba(0, 80, 200, 0.08)',  // Azul medio
+            'rgba(200, 0, 100, 0.05)', // Magenta suave
+            'rgba(20, 0, 40, 0.2)'     // Oscuridad base
+        ];
+
+        // Ajustar al tamaño de la ventana
+        function resize() {
+            width = window.innerWidth;
+            height = window.innerHeight;
+            canvas.width = width;
+            canvas.height = height;
+        }
+        window.addEventListener('resize', resize);
+        resize();
+
+        // Objeto: Nube de Nebulosa
+        class Cloud {
+            constructor() {
+                this.init();
+            }
+
+            init() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.radius = Math.random() * 200 + 100; // Radio grande
+                this.speedX = (Math.random() - 0.5) * 0.2; // Movimiento muy lento
+                this.speedY = (Math.random() - 0.5) * 0.2;
+                this.color = nebulaColors[Math.floor(Math.random() * nebulaColors.length)];
+            }
+
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+
+                // Si se sale de la pantalla, reaparece en el lado opuesto
+                if (this.x < -300) this.x = width + 300;
+                if (this.x > width + 300) this.x = -300;
+                if (this.y < -300) this.y = height + 300;
+                if (this.y > height + 300) this.y = -300;
+            }
+
+            draw() {
+                ctx.beginPath();
+                // Gradiente radial para suavidad extrema
+                const gradient = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.radius);
+                gradient.addColorStop(0, this.color);
+                gradient.addColorStop(1, 'rgba(0,0,0,0)'); // Borde transparente
+                
+                ctx.fillStyle = gradient;
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        // Objeto: Estrella
+        class Star {
+            constructor() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.size = Math.random() * 2; // Tamaño pequeño
+                this.opacity = Math.random();
+                this.speed = Math.random() * 0.02 + 0.005; // Velocidad de parpadeo
+            }
+
+            update() {
+                this.opacity += this.speed;
+                // Invertir dirección de parpadeo al llegar a límites
+                if (this.opacity > 1 || this.opacity < 0) {
+                    this.speed = -this.speed;
+                }
+            }
+
+            draw() {
+                ctx.fillStyle = `rgba(255, 255, 255, ${Math.abs(this.opacity)})`;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        // Inicializar elementos
+        function initElements() {
+            particles = [];
+            stars = [];
+            // Crear 40 nubes de gas
+            for (let i = 0; i < 40; i++) {
+                particles.push(new Cloud());
+            }
+            // Crear 150 estrellas
+            for (let i = 0; i < 150; i++) {
+                stars.push(new Star());
+            }
+        }
+
+        // Bucle de animación principal
+        function animate() {
+            // Limpiar pantalla (Fondo negro)
+            ctx.fillStyle = '#000000';
+            ctx.fillRect(0, 0, width, height);
+
+            // 1. Dibujar Nebulosa (Efecto de mezcla 'screen' para luminosidad)
+            ctx.globalCompositeOperation = 'screen';
+            particles.forEach(cloud => {
+                cloud.update();
+                cloud.draw();
+            });
+
+            // 2. Dibujar Estrellas (Modo normal)
+            ctx.globalCompositeOperation = 'source-over';
+            stars.forEach(star => {
+                star.update();
+                star.draw();
+            });
+
+            requestAnimationFrame(animate);
+        }
+
+        // Iniciar todo
+        initElements();
+        animate();
+
+        // Habilitar pantalla completa con doble clic
+        document.addEventListener('dblclick', () => {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen();
+            } else {
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            }
+        });
+
+    </script>
+</body>
+</html>
